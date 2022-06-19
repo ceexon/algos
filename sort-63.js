@@ -40,8 +40,6 @@ while (sectionStart < selectedSortGroup) {
   sectionStart++;
 }
 
-let start = 0;
-
 function sort(
   currentItemIndex,
   lastItemIndex,
@@ -57,59 +55,40 @@ function sort(
   }
 }
 
-function quicksort(firstAnchors, endAnchors, smallAnchors, sections) {
-  console.log("first anchors -> ", firstAnchors);
-  console.log("end anchors ->", endAnchors);
-  console.log("small Anchors ->", smallAnchors);
-  console.log("sections", sections);
-
-  console.log("-------------------- SORT -------------------------------");
-  if (sections) {
+function quicksort(firstAnchors, endAnchors, smallAnchors) {
+  firstAnchors.forEach((first, i) => {
     let start = 0;
-    while (start < sections) {
-      for (let i = 0; i < endAnchors.length; i++) {
-        const currentItemIndex = firstAnchors[i] + start;
-        const lastItemIndex = endAnchors[i];
-
-        sort(currentItemIndex, lastItemIndex, i, smallAnchors);
-      }
+    for (let j = first; j <= endAnchors[i]; j++) {
+      const lastItemIndex = endAnchors[i];
+      sort(j, lastItemIndex, i, smallAnchors);
       start++;
     }
-  }
 
-  const newFirstAnchors = [];
-  const newEndAnchors = [];
-  const newSmallAnchors = [];
-  const newSections = sections * 2;
+    const newFirstAnchors = [];
+    const newEndAnchors = [];
+    const newSmallAnchors = [];
 
-  endAnchors.forEach((endIndex, index) => {
-    const smallest = smallAnchors[index];
-    const startIndex = firstAnchors[index];
-    if (smallest !== endIndex) {
-      // push left
+    const smallest = smallAnchors[i];
+    const startIndex = first;
+    const endIndex = endAnchors[i];
+
+    // push left
+    if (smallest - startIndex > 1) {
       newFirstAnchors.push(startIndex);
       newEndAnchors.push(smallest - 1);
       newSmallAnchors.push(startIndex - 1);
-      // push right
+    }
+    // push right
+    if (endIndex - smallest > 1) {
       newFirstAnchors.push(smallest + 1);
       newEndAnchors.push(endIndex);
       newSmallAnchors.push(smallest);
     }
+
+    quicksort(newFirstAnchors, newEndAnchors, newSmallAnchors);
   });
-
-  //   quicksort(newFirstAnchors, newEndAnchors, newSmallAnchors, newSections)
-
-  console.log(smallAnchors);
-  console.log("New first anchors -> ", newFirstAnchors);
-  console.log("New end anchors ->", newEndAnchors);
-  console.log("New small Anchors ->", newSmallAnchors);
-  console.log("New sections", newSections);
 }
 
-quicksort(
-  firstSectionAnchors,
-  endSectionAnchors,
-  smallestSectionIndices,
-  sections
-);
+// quicksort(firstSectionAnchors, endSectionAnchors, smallestSectionIndices);
+quicksort([0], [62], [-1]);
 console.log(arr);
